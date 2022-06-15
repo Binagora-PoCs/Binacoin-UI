@@ -20,5 +20,23 @@ class BinagoriansDataService {
     const response = contract.create(data.address, data.createdDate, data.name, data.rate);
     return response;
   }
+
+  getCurrent() {
+    const contract = this.getBinagoriansContract();
+    const response = contract.getCurrent();
+    return response;
+  }
+
+  get(address) {
+    const contract = this.getBinagoriansContract();
+    const response = contract.get(address);
+    return response;
+  }
+
+  getRegisteredAddresses() {
+    const contract = this.getBinagoriansContract();
+    const response = contract.getRegisteredAddresses();
+    return response;
+  }
 }
 export default new BinagoriansDataService();

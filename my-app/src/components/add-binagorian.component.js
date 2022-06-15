@@ -1,4 +1,13 @@
 import React, { Component } from "react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+  HStack,
+} from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
 export default class AddBinagorian extends Component {
   constructor(props) {
@@ -70,70 +79,42 @@ export default class AddBinagorian extends Component {
   }
   render() {
     return (
-      <div className="submit-form">
-        {this.state.submitted ? (
-          <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newBinagorian}>
-              Add
-            </button>
-          </div>
-        ) : (
-          <div>
-            <div className="form-group">
-              <label htmlFor="address">Address</label>
-              <input
-                type="text"
-                className="form-control"
-                id="address"
-                required
-                value={this.state.address}
-                onChange={this.onChangeAddress}
-                name="address"
-              />
+        <Box>
+          {this.state.submitted ? (
+            <div>
+              <h4>You submitted successfully!</h4>
+              <button className="btn btn-success" onClick={this.newBinagorian}>
+                Add
+              </button>
             </div>
-            <div className="form-group">
-              <label htmlFor="createdDate">Created date</label>
-              <input
-                type="text"
-                className="form-control"
-                id="createdDate"
-                required
-                value={this.state.createdDate}
-                onChange={this.onChangeCreatedDate}
-                name="createdDate"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                required
-                value={this.state.name}
-                onChange={this.onChangeName}
-                name="name"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="rate">Rate</label>
-              <input
-                type="text"
-                className="form-control"
-                id="rate"
-                required
-                value={this.state.rate}
-                onChange={this.onChangeRate}
-                name="rate"
-              />
-            </div>
-            <button onClick={this.createBinagorian} className="btn btn-success">
-              Submit
-            </button>
-          </div>
-        )}
-      </div>
+            ) : (
+              <FormControl>
+                <VStack
+                  spacing={4}
+                  align='stretch'
+                >
+                  <HStack spacing={5}>
+                    <FormLabel htmlFor='address'>Address</FormLabel>
+                    <Input id='address' type='text' required value={this.state.address} onChange={this.onChangeAddress} />
+                  </HStack>
+                  <HStack spacing={5}>
+                    <FormLabel htmlFor='createdDate'>Created Date</FormLabel>
+                    <Input id='createdDate' type='text' required value={this.state.createdDate} onChange={this.onChangeCreatedDate} />
+                  </HStack>
+                  <HStack spacing={5}>
+                    <FormLabel htmlFor='name'>Name</FormLabel>
+                    <Input id='name' type='text' required value={this.state.name} onChange={this.onChangeName} />
+                  </HStack>
+                  <HStack spacing={5}>
+                    <FormLabel htmlFor='rate'>Rate</FormLabel>
+                    <Input id='rate' type='text' required value={this.state.rate} onChange={this.onChangeRate} />
+                  </HStack>
+                  <Button colorScheme='blue' size='sm' onClick={this.createBinagorian}>Create</Button>
+                </VStack>
+                
+              </FormControl>
+            )}
+          </Box>
     );
   }
 }
