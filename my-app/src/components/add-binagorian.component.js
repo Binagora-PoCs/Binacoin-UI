@@ -9,6 +9,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
+import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 export default class AddBinagorian extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,7 @@ export default class AddBinagorian extends Component {
   }
   onChangeCreatedDate(e) {
     this.setState({
-      createdDate: e.target.value
+      createdDate: e
     });
   }
   onChangeRate(e) {
@@ -50,7 +51,7 @@ export default class AddBinagorian extends Component {
     var data = {
       address: this.state.address,
       name: this.state.name,
-      createdDate: this.state.createdDate,
+      createdDate: Date.parse(this.state.createdDate) / 1000,
       rate: this.state.rate
     };
     BinagoriansDataService.create(data)
@@ -99,7 +100,12 @@ export default class AddBinagorian extends Component {
                   </HStack>
                   <HStack spacing={5}>
                     <FormLabel htmlFor='createdDate'>Created Date</FormLabel>
-                    <Input id='createdDate' type='text' required value={this.state.createdDate} onChange={this.onChangeCreatedDate} />
+                    <SingleDatepicker
+                      id = 'createdDate'
+                      name="date-input"
+                      date={this.state.createdDate}
+                      onDateChange={this.onChangeCreatedDate}
+                    />
                   </HStack>
                   <HStack spacing={5}>
                     <FormLabel htmlFor='name'>Name</FormLabel>

@@ -38,5 +38,11 @@ class BinagoriansDataService {
     const response = contract.getRegisteredAddresses();
     return response;
   }
+
+  delete(address) {
+    const contract = this.getBinagoriansContract();
+    const response = contract.remove(address);
+    return response;
+  }
 }
 export default new BinagoriansDataService();

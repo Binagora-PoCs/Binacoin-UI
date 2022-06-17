@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import DataTable  from './data-table.component'
-import { TableContainer } from '@chakra-ui/react';
+import { TableContainer, Button } from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
 export default class Binagorians extends Component {
   constructor(props) {
@@ -27,9 +27,34 @@ export default class Binagorians extends Component {
               accessor: 'rate',
               isNumeric: true
             },
+            {
+              Header: 'Action',
+              accessor: (originalRow, rowIndex) => (
+                <div>
+                    <Button onClick={() => this.handleEdit(originalRow)}>Edit</Button>
+                    <Button onClick={() => this.handleDelete(originalRow)}>Delete</Button>
+                </div>
+             ),
+             id: 'action',
+            }
           ]
       };
-    this.getBinagorians();
+    
+      this.getBinagorians();
+  }
+
+  async handleDelete(row) {
+    BinagoriansDataService.delete(row.address)
+      .then(response => {
+        this.getBinagorians();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  handleEdit(row) {
+    // TODO: Move to a page to update rate
   }
 
   async getBinagorians() {
@@ -38,15 +63,20 @@ export default class Binagorians extends Component {
     
     for (let a of bAddresesResponse) {
         let binagorianResponse = await BinagoriansDataService.get(a);
-        let d = new Date(binagorianResponse.entryTime.toString()).toDateString();
-        binagorians.push({ address: a, name: binagorianResponse.name, entryTime: d, rate: binagorianResponse.rate.toString() });
+        binagorians.push({ 
+          address: a, 
+          name: binagorianResponse.name, 
+          entryTime: new Date(binagorianResponse.entryTime * 1000).toDateString(), 
+          rate: binagorianResponse.rate.toString() 
+        });
     };
 
     this.setState({
-        loadingData : false,
-        data : binagorians
+      loadingData : false,
+      data : binagorians,
     });
   }
+
   render() {
     return (
         <TableContainer>
