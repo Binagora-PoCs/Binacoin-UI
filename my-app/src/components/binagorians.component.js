@@ -28,6 +28,11 @@ export default class Binagorians extends Component {
               isNumeric: true
             },
             {
+              Header: 'Airdrop amount',
+              accessor: 'airdropAmount',
+              isNumeric: true
+            },
+            {
               Header: 'Action',
               accessor: (originalRow, rowIndex) => (
                 <div>
@@ -67,7 +72,8 @@ export default class Binagorians extends Component {
           address: a, 
           name: binagorianResponse.name, 
           entryTime: new Date(binagorianResponse.entryTime * 1000).toDateString(), 
-          rate: binagorianResponse.rate.toString() 
+          rate: binagorianResponse.rate.toString(),
+          airdropAmount: binagorianResponse.airdropAmount.toString()
         });
     };
 

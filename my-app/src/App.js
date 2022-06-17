@@ -3,12 +3,11 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
   Box,
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import AddBinagorian from "./components/add-binagorian.component";
 import BinagorianProfile from "./components/binagorian-profile.component";
 import Binagorians from "./components/binagorians.component";
