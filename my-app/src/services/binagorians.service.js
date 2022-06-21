@@ -1,5 +1,5 @@
 import { BINAGORIANS_ABI, BINAGORIANS_ADDRESS } from '../contracts-config';
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 
 class BinagoriansDataService {
   
@@ -15,10 +15,15 @@ class BinagoriansDataService {
     }
   }
 
-  create(data) {
-    const contract = this.getBinagoriansContract();
-    const response = contract.create(data.address, data.createdDate, data.name, data.rate);
-    return response;
+  async getTxs() {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      provider.waitForTransaction()
+      const count = await provider.getTransactionCount('0xdD2FD4581271e230360230F9337D5c0430Bf44C0');
+      return count;
+    }
+
+    return 0;
   }
 
   getCurrent() {
@@ -36,12 +41,6 @@ class BinagoriansDataService {
   getRegisteredAddresses() {
     const contract = this.getBinagoriansContract();
     const response = contract.getRegisteredAddresses();
-    return response;
-  }
-
-  delete(address) {
-    const contract = this.getBinagoriansContract();
-    const response = contract.remove(address);
     return response;
   }
 

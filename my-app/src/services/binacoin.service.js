@@ -27,5 +27,17 @@ class BinacoinDataService {
         const response = binacoinContract.balanceOf(address);
         return response;
     }
+
+    async getName() {
+        const binacoinContract = this.getBinacoinContract();
+        const response = binacoinContract.name();
+        return response;
+    }
+
+    async decimals() {
+        const binacoinContract = this.getBinacoinContract();
+        const response = binacoinContract.decimals();
+        return response;
+    }
 }
 export default new BinacoinDataService();

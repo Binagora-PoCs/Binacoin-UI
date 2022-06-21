@@ -1,9 +1,15 @@
 import React, { Component } from "react";
+import { ethers, utils } from "ethers";
 import {
-  Text,
-  Badge,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  Box,
+  Button
 } from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
+import BinacoinDataService from "../services/binacoin.service.js";
 export default class BinagorianProfile extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +19,6 @@ export default class BinagorianProfile extends Component {
         rate: 0,
         connected: ""
       };
-    this.getCurrent();
   }
 
   getCurrent() {
@@ -22,23 +27,77 @@ export default class BinagorianProfile extends Component {
         this.setState({
           createdDate: response.entryTime,
           name: response.name,
-          rate: response.rate,
-          connected: "Connected"
+          rate: response.rate
         });
-        console.log(response);
       })
       .catch(e => {
         console.log(e);
       });
   }
+
+  getTxs() {
+    BinagoriansDataService.getTxs()
+      .then(response => {
+        this.setState({
+          txs : response
+        })
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  async connectToMetamask() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const balance = await provider.getBalance(accounts[0]);
+    const balanceInEther = ethers.utils.formatEther(balance);
+    const block = await provider.getBlockNumber();
+
+    this.getCurrent();
+    this.getTxs();
+
+    provider.on("block", (block) => {
+      this.setState({ block })
+    });
+
+    // let contract = BinagoriansDataService.getBinagoriansContract();
+    // contract.on("Created", (address) => {
+    //   if (address) {
+    //     alert('created binagorian: ' + address);
+    //   }
+    // });
+
+    const tokenName = await BinacoinDataService.getName();
+    const tokenBalance = await BinacoinDataService.getBalance(accounts[0]);
+    const tokenUnits = await BinacoinDataService.decimals();
+    const tokenBalanceInEther = utils.formatUnits(tokenBalance, tokenUnits);
+
+    this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther })
+  }
+
+  renderMetamask() {
+    if (!this.state.selectedAddress) {
+      return (
+        <Button onClick={() => this.connectToMetamask()}>Connect to Metamask</Button>
+      )
+    } else {
+      return (
+          <Stat>
+            <StatLabel>Your ETH Balance is: {this.state.balance}</StatLabel>
+            <StatLabel>Balance of {this.state.tokenName} is: {this.state.tokenBalanceInEther}</StatLabel>
+            <StatNumber>Welcome {this.state.selectedAddress} - { this.state.name }</StatNumber>
+            <StatHelpText>Current ETH Block is: {this.state.block}</StatHelpText>
+          </Stat>
+      );
+    }
+  }
+
   render() {
-    return (
-        <Text fontSize='xl' fontWeight='bold' align="right">
-            { this.state.name }
-            <Badge ml='1' fontSize='0.8em' colorScheme='green'>
-                { this.state.connected }
-            </Badge>
-        </Text>
-    );
+    return(
+      <Box align="right">
+        {this.renderMetamask()}
+      </Box>
+    )
   }
 }

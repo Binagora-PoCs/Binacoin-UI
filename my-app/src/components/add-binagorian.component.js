@@ -54,20 +54,15 @@ export default class AddBinagorian extends Component {
       createdDate: Date.parse(this.state.createdDate) / 1000,
       rate: this.state.rate
     };
-    BinagoriansDataService.create(data)
-      .then(response => {
-        this.setState({
-          address: response.data.address,
-          createdDate: response.data.createdDate,
-          name: response.data.name,
-          rate: response.data.rate,
-          submitted: true
-        });
-        console.log(response);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    
+    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
+    binagoriansContract.on("Created", (address) => {
+      // Here the Binagorian is effectively created in the blockchain
+      if (address == this.state.address) {
+        alert('created binagorian: ' + address);
+      }
+    });
   }
   newBinagorian() {
     this.setState({

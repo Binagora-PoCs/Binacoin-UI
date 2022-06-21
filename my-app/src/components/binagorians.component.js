@@ -58,13 +58,15 @@ export default class Binagorians extends Component {
   }
 
   async handleDelete(row) {
-    BinagoriansDataService.delete(row.address)
-      .then(response => {
+    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    binagoriansContract.remove(row.address);
+    binagoriansContract.on("Deleted", (address) => {
+      // Here the Binagorian is effectively deleted in the blockchain
+      if (address == row.address) {
+        // Reload the grid
         this.getBinagorians();
-      })
-      .catch(e => {
-        console.log(e);
-      });
+      }
+    });
   }
 
   handleEdit(row) {

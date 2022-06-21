@@ -1,11 +1,32 @@
-export const BINAGORIANS_ADDRESS = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'
+export const BINAGORIANS_ADDRESS = '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584'
 export const BINACOIN_ADDRESS = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
 
 export const BINAGORIANS_ABI = [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "Created",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "Deleted",
+    "type": "event"
   },
   {
     "anonymous": false,
