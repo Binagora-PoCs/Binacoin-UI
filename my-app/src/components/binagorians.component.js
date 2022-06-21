@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import DataTable  from './data-table.component'
 import { TableContainer, Button, Box } from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
+import BinacoinDataService from "../services/binacoin.service.js";
+import DistributorDataService from "../services/distributor.service.js";
 import { utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import keccak256 from "keccak256";
@@ -118,7 +120,7 @@ export default class Binagorians extends Component {
     const leaf = utils.solidityKeccak256(["address", "uint256"], [address, amount]);
     const proof = merkleTree.getHexProof(leaf);
 
-    let response = await BinagoriansDataService.canClaim(address, amount, proof);
+    let response = await DistributorDataService.canClaim(address, amount, proof);
     alert(response);
   }
 
@@ -131,19 +133,20 @@ export default class Binagorians extends Component {
     const leaf = utils.solidityKeccak256(["address", "uint256"], [address, amount]);
     const proof = merkleTree.getHexProof(leaf);
 
-    let response = await BinagoriansDataService.claim(address, amount, proof);
+    let response = await DistributorDataService.claim(address, amount, proof);
     alert(response);
   }
 
   async getDistributorData() {
     const distributorAddress = await BinagoriansDataService.getMerkleDistributorAddress();
-    const distributorBalance = await BinagoriansDataService.getDistributorBalance();
+    const distributorBalance = await BinacoinDataService.getBalance(distributorAddress);
 
     alert("address: " + distributorAddress + ". balance: " + distributorBalance);
   }
 
-  mintToDistributor() {
-    BinagoriansDataService.mintToDistributor(100);
+  async mintToDistributor() {
+    const mdAddress = await BinagoriansDataService.getMerkleDistributorAddress();
+    BinacoinDataService.mintTo(100, mdAddress);
   }
 
   render() {

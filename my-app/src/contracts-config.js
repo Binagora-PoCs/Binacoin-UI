@@ -1,4 +1,4 @@
-export const BINAGORIANS_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+export const BINAGORIANS_ADDRESS = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'
 export const BINACOIN_ADDRESS = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
 
 export const BINAGORIANS_ABI = [
@@ -43,58 +43,6 @@ export const BINAGORIANS_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "bAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "merkleProof",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "canClaim",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "bAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "merkleProof",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "claim",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "_bAddress",
         "type": "address"
       },
@@ -117,19 +65,6 @@ export const BINAGORIANS_ABI = [
     "name": "create",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "distributor",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -227,6 +162,19 @@ export const BINAGORIANS_ABI = [
         "internalType": "uint16",
         "name": "rate",
         "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMerkleDistributorAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
