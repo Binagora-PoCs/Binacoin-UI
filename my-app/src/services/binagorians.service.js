@@ -1,5 +1,5 @@
 import { BINAGORIANS_ABI, BINAGORIANS_ADDRESS } from '../contracts-config';
-import { ethers, utils } from "ethers";
+import { ethers } from "ethers";
 
 class BinagoriansDataService {
   
@@ -44,21 +44,9 @@ class BinagoriansDataService {
     return response;
   }
 
-  getAirdropAmounts() {
+  generateAirdrop(tokenAddress) {
     const contract = this.getBinagoriansContract();
-    const response = contract.getAirdropAmounts();
-    return response;
-  }
-
-  generateAirdrop(tokenAddress, root) {
-    const contract = this.getBinagoriansContract();
-    const response = contract.generateAirdrop(tokenAddress, root);
-    return response;
-  }
-
-  getMerkleDistributorAddress() {
-    const contract = this.getBinagoriansContract();
-    const response = contract.getMerkleDistributorAddress();
+    const response = contract.generateAirdrop(tokenAddress);
     return response;
   }
 }

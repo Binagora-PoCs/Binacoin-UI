@@ -1,7 +1,26 @@
-export const BINAGORIANS_ADDRESS = '0x4C4a2f8c81640e47606d3fd77B353E87Ba015584'
+export const BINAGORIANS_ADDRESS = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707'
 export const BINACOIN_ADDRESS = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
 
 export const BINAGORIANS_ABI = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_time",
+        "type": "uint256"
+      }
+    ],
+    "name": "AirdropSent",
+    "type": "event"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -48,19 +67,6 @@ export const BINAGORIANS_ABI = [
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "_merkleDistributor",
-    "outputs": [
-      {
-        "internalType": "contract MerkleDistributor",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -92,13 +98,8 @@ export const BINAGORIANS_ABI = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "token",
+        "name": "_token",
         "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "merkleRoot",
-        "type": "bytes32"
       }
     ],
     "name": "generateAirdrop",
@@ -142,31 +143,6 @@ export const BINAGORIANS_ABI = [
   },
   {
     "inputs": [],
-    "name": "getAirdropAmounts",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "addr",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Binagorians.BinagorianAirdrop[]",
-        "name": "binagorianAirdrops",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getCurrent",
     "outputs": [
       {
@@ -183,19 +159,6 @@ export const BINAGORIANS_ABI = [
         "internalType": "uint16",
         "name": "rate",
         "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getMerkleDistributorAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -703,141 +666,6 @@ export const BINACOIN_ABI = [
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
-
-export const DISTRIBUTOR_ABI = [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_merkleRoot",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "Claimed",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "merkleProof",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "canClaim",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "merkleProof",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "claim",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "claimed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "merkleRoot",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "token",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

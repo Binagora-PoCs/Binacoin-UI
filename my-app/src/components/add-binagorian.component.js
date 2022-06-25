@@ -59,7 +59,7 @@ export default class AddBinagorian extends Component {
     binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
     binagoriansContract.on("Created", (address) => {
       // Here the Binagorian is effectively created in the blockchain
-      if (address == this.state.address) {
+      if (address === this.state.address) {
         alert('created binagorian: ' + address);
       }
     });
