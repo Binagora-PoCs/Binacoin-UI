@@ -4,6 +4,7 @@ import { TableContainer, Button, Box } from '@chakra-ui/react';
 import BinagoriansDataService from "../services/binagorians.service.js";
 import BinacoinDataService from "../services/binacoin.service.js";
 import { BINACOIN_ADDRESS, BINAGORIANS_ADDRESS } from '../contracts-config';
+import { BigNumber } from "ethers";
 
 export default class Binagorians extends Component {
   constructor(props) {
@@ -33,6 +34,11 @@ export default class Binagorians extends Component {
             {
               Header: 'Airdrop amount',
               accessor: 'airdropAmount',
+              isNumeric: true
+            },
+            {
+              Header: 'Pending amount',
+              accessor: 'pendingAmount',
               isNumeric: true
             },
             {
@@ -73,12 +79,14 @@ export default class Binagorians extends Component {
     
     for (let a of bAddresesResponse) {
         let binagorianResponse = await BinagoriansDataService.get(a);
+        let pendingAmount = await BinacoinDataService.getBalance(a);
         binagorians.push({ 
           address: a, 
           name: binagorianResponse.name, 
           entryTime: new Date(binagorianResponse.entryTime * 1000).toDateString(), 
           rate: binagorianResponse.rate.toString(),
-          airdropAmount: binagorianResponse.airdropAmount.toString()
+          airdropAmount: binagorianResponse.airdropAmount.toString(),
+          pendingAmount: pendingAmount.toString(),
         });
     };
 
@@ -89,11 +97,22 @@ export default class Binagorians extends Component {
   }
 
   async generateAirdrop() {
-    BinagoriansDataService.generateAirdrop(BINACOIN_ADDRESS);
+    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
+    binagoriansContract.on("AirdropFinished", () => {
+      // Here the Airdrop is effectively finished in the blockchain
+      alert("Airdrop finished");
+    });
   }
 
   async mintToBinagorians() {
-    BinacoinDataService.mintTo(100, BINAGORIANS_ADDRESS);
+    const binacoinContract = BinacoinDataService.getBinacoinContract();
+    const binacoinDecimals = await binacoinContract.decimals();
+    binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
+    binacoinContract.on("Minted", (address, amount) => {
+      // Here the mint is effectively finished in the blockchain
+      alert("Mint finished");
+    });
   }
 
   render() {
