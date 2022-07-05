@@ -8,7 +8,7 @@ import {
   VStack,
   HStack,
 } from '@chakra-ui/react';
-import BinagoriansDataService from "../services/binagorians.service.js";
+import ConstractsService from "../services/contracts.service.js";
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 export default class AddBinagorian extends Component {
   constructor(props) {
@@ -55,7 +55,7 @@ export default class AddBinagorian extends Component {
       rate: this.state.rate
     };
     
-    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    const binagoriansContract = ConstractsService.getBinagoriansContract();
     binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
     binagoriansContract.on("Created", (address) => {
       // Here the Binagorian is effectively created in the blockchain

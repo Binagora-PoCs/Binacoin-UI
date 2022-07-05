@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import DataTable  from './data-table.component'
 import { TableContainer, Button, Box } from '@chakra-ui/react';
-import BinagoriansDataService from "../services/binagorians.service.js";
-import BinacoinDataService from "../services/binacoin.service.js";
+import ContractsService from "../services/contracts.service.js";
 import { BINACOIN_ADDRESS, BINAGORIANS_ADDRESS } from '../contracts-config';
 import { BigNumber } from "ethers";
 
@@ -58,7 +57,7 @@ export default class Binagorians extends Component {
   }
 
   async handleDelete(row) {
-    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    const binagoriansContract = ContractsService.getBinagoriansContract();
     binagoriansContract.remove(row.address);
     binagoriansContract.on("Deleted", (address) => {
       // Here the Binagorian is effectively deleted in the blockchain
@@ -75,11 +74,13 @@ export default class Binagorians extends Component {
 
   async getBinagorians() {
     let binagorians = [];
-    let bAddresesResponse = await BinagoriansDataService.getRegisteredAddresses();
+    const binagoriansContract = ContractsService.getBinagoriansContract();
+    const binacoinContract = ContractsService.getBinacoinContract();
+    let bAddresesResponse = await binagoriansContract.getRegisteredAddresses();
     
     for (let a of bAddresesResponse) {
-        let binagorianResponse = await BinagoriansDataService.get(a);
-        let pendingAmount = await BinacoinDataService.getBalance(a);
+        let binagorianResponse = await binagoriansContract.get(a);
+        let pendingAmount = await binacoinContract.balanceOf(a);
         binagorians.push({ 
           address: a, 
           name: binagorianResponse.name, 
@@ -97,7 +98,7 @@ export default class Binagorians extends Component {
   }
 
   async generateAirdrop() {
-    const binagoriansContract = BinagoriansDataService.getBinagoriansContract();
+    const binagoriansContract = ContractsService.getBinagoriansContract();
     binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
     binagoriansContract.on("AirdropFinished", () => {
       // Here the Airdrop is effectively finished in the blockchain
@@ -106,7 +107,7 @@ export default class Binagorians extends Component {
   }
 
   async mintToBinagorians() {
-    const binacoinContract = BinacoinDataService.getBinacoinContract();
+    const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
     binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
     binacoinContract.on("Minted", (address, amount) => {

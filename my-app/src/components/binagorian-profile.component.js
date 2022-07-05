@@ -8,8 +8,7 @@ import {
   Box,
   Button
 } from '@chakra-ui/react';
-import BinagoriansDataService from "../services/binagorians.service.js";
-import BinacoinDataService from "../services/binacoin.service.js";
+import ContractsService from "../services/contracts.service.js";
 export default class BinagorianProfile extends Component {
   constructor(props) {
     super(props);
@@ -22,25 +21,14 @@ export default class BinagorianProfile extends Component {
   }
 
   getCurrent() {
-    BinagoriansDataService.getCurrent()
+    const binagoriansContract = ContractsService.getBinagoriansContract();
+    binagoriansContract.getCurrent()
       .then(response => {
         this.setState({
           createdDate: response.entryTime,
           name: response.name,
           rate: response.rate
         });
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  getTxs() {
-    BinagoriansDataService.getTxs()
-      .then(response => {
-        this.setState({
-          txs : response
-        })
       })
       .catch(e => {
         console.log(e);
@@ -55,22 +43,15 @@ export default class BinagorianProfile extends Component {
     const block = await provider.getBlockNumber();
 
     this.getCurrent();
-    this.getTxs();
 
     provider.on("block", (block) => {
       this.setState({ block })
     });
 
-    // let contract = BinagoriansDataService.getBinagoriansContract();
-    // contract.on("Created", (address) => {
-    //   if (address) {
-    //     alert('created binagorian: ' + address);
-    //   }
-    // });
-
-    const tokenName = await BinacoinDataService.getName();
-    const tokenBalance = await BinacoinDataService.getBalance(accounts[0]);
-    const tokenUnits = await BinacoinDataService.decimals();
+    const binacoinContract = ContractsService.getBinacoinContract();
+    const tokenName = await binacoinContract.name();
+    const tokenBalance = await binacoinContract.balanceOf(accounts[0]);
+    const tokenUnits = await binacoinContract.decimals();
     const tokenBalanceInEther = utils.formatUnits(tokenBalance, tokenUnits);
 
     this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther })
