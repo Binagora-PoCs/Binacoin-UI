@@ -47,7 +47,8 @@ export default class AddBinagorian extends Component {
       rate: e.target.value
     });
   }
-  createBinagorian() {
+  
+  async createBinagorian() {
     var data = {
       address: this.state.address,
       name: this.state.name,
@@ -56,14 +57,12 @@ export default class AddBinagorian extends Component {
     };
     
     const binagoriansContract = ConstractsService.getBinagoriansContract();
-    binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
-    binagoriansContract.on("Created", (address) => {
-      // Here the Binagorian is effectively created in the blockchain
-      if (address === this.state.address) {
-        alert('created binagorian: ' + address);
-      }
+    let tx = await binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
+    tx.wait(1).then((receipt) => {
+      alert('created binagorian: ' + data.address);
     });
   }
+
   newBinagorian() {
     this.setState({
         address:"",

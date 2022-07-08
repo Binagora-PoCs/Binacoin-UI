@@ -3,7 +3,7 @@ import DataTable  from './data-table.component'
 import { TableContainer, Button, Box } from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { BINACOIN_ADDRESS, BINAGORIANS_ADDRESS } from '../contracts-config';
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 
 export default class Binagorians extends Component {
   constructor(props) {
@@ -58,13 +58,12 @@ export default class Binagorians extends Component {
 
   async handleDelete(row) {
     const binagoriansContract = ContractsService.getBinagoriansContract();
-    binagoriansContract.remove(row.address);
-    binagoriansContract.on("Deleted", (address) => {
-      // Here the Binagorian is effectively deleted in the blockchain
-      if (address === row.address) {
-        // Reload the grid
-        this.getBinagorians();
-      }
+    let tx = await binagoriansContract.remove(row.address);
+
+    tx.wait(1).then((receipt) => {
+      // This gets called once there are 1 confirmation
+      // Reload the grid
+      this.getBinagorians();
     });
   }
 
@@ -80,14 +79,17 @@ export default class Binagorians extends Component {
     
     for (let a of bAddresesResponse) {
         let binagorianResponse = await binagoriansContract.get(a);
-        let pendingAmount = await binacoinContract.balanceOf(a);
+        let tokenBalance = await binacoinContract.balanceOf(a);
+        let tokenUnits = await binacoinContract.decimals();
+        let tokenBalanceInEther = utils.formatUnits(tokenBalance, tokenUnits);
+
         binagorians.push({ 
           address: a, 
           name: binagorianResponse.name, 
           entryTime: new Date(binagorianResponse.entryTime * 1000).toDateString(), 
           rate: binagorianResponse.rate.toString(),
           airdropAmount: binagorianResponse.airdropAmount.toString(),
-          pendingAmount: pendingAmount.toString(),
+          pendingAmount: tokenBalanceInEther,
         });
     };
 
@@ -99,20 +101,22 @@ export default class Binagorians extends Component {
 
   async generateAirdrop() {
     const binagoriansContract = ContractsService.getBinagoriansContract();
-    binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
-    binagoriansContract.on("AirdropFinished", () => {
-      // Here the Airdrop is effectively finished in the blockchain
-      alert("Airdrop finished");
+    let tx = await binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
+    
+    tx.wait(1).then((receipt) => {
+      // This gets called once there are 1 confirmation
+      alert("Airdrop Confirmation received: " + receipt.transactionHash);
     });
   }
 
   async mintToBinagorians() {
     const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
-    binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
-    binacoinContract.on("Minted", (address, amount) => {
-      // Here the mint is effectively finished in the blockchain
-      alert("Mint finished");
+    let tx = await binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
+    
+    tx.wait(1).then((receipt) => {
+      // This gets called once there are 1 confirmation
+      alert("Mint Confirmation received: " + receipt.transactionHash);
     });
   }
 

@@ -1,13 +1,7 @@
-export const BINAGORIANS_ADDRESS = '0x68B1D87F95878fE05B998F19b66F4baba5De1aed'
-export const BINACOIN_ADDRESS = '0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1'
+export const BINAGORIANS_ADDRESS = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'
+export const BINACOIN_ADDRESS = '0x95401dc811bb5740090279Ba06cfA8fcF6113778'
 
 export const BINAGORIANS_ABI = [
-  {
-    "anonymous": false,
-    "inputs": [],
-    "name": "AirdropFinished",
-    "type": "event"
-  },
   {
     "anonymous": false,
     "inputs": [
@@ -25,32 +19,6 @@ export const BINAGORIANS_ABI = [
       }
     ],
     "name": "AirdropSent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "Created",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "Deleted",
     "type": "event"
   },
   {
@@ -278,25 +246,6 @@ export const BINACOIN_ABI = [
       }
     ],
     "name": "Approval",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "Minted",
     "type": "event"
   },
   {

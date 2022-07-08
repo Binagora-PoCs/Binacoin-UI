@@ -18,6 +18,24 @@ export default class BinagorianProfile extends Component {
         rate: 0,
         connected: ""
       };
+    
+    window.ethereum.on('accountsChanged', (accounts) => {
+      // Handle the new accounts, or lack thereof.
+      // "accounts" will always be an array, but it can be empty.
+      this.connectToMetamask();
+    });
+
+    window.ethereum.on('connect', (accounts) => {
+      // Handle the new accounts, or lack thereof.
+      // "accounts" will always be an array, but it can be empty.
+      this.connectToMetamask();
+    });
+
+    window.ethereum.on('disconnect', (accounts) => {
+      // Handle the new accounts, or lack thereof.
+      // "accounts" will always be an array, but it can be empty.
+      this.connectToMetamask();
+    });
   }
 
   getCurrent() {
@@ -54,7 +72,17 @@ export default class BinagorianProfile extends Component {
     const tokenUnits = await binacoinContract.decimals();
     const tokenBalanceInEther = utils.formatUnits(tokenBalance, tokenUnits);
 
-    this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther })
+    this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther });
+
+    const binagoriansContract = ContractsService.getBinagoriansContract();
+
+    // binagoriansContract.on("AirdropSent", (address, time) => {
+    //   // Here we check if the Binagorian received an airdrop
+    //   if (accounts[0].toLowerCase() === address.toLowerCase())
+    //   {
+    //     alert("Airdrop received");
+    //   }
+    // });
   }
 
   renderMetamask() {
