@@ -76,13 +76,13 @@ export default class BinagorianProfile extends Component {
 
     const binagoriansContract = ContractsService.getBinagoriansContract();
 
-    // binagoriansContract.on("AirdropSent", (address, time) => {
-    //   // Here we check if the Binagorian received an airdrop
-    //   if (accounts[0].toLowerCase() === address.toLowerCase())
-    //   {
-    //     alert("Airdrop received");
-    //   }
-    // });
+    binagoriansContract.on("AirdropSent", (address, time) => {
+      // Here we check if the Binagorian received an airdrop
+      if (accounts[0].toLowerCase() === address.toLowerCase())
+      {
+        alert("Airdrop received");
+      }
+    });
   }
 
   renderMetamask() {
