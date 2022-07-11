@@ -103,7 +103,6 @@ export default class Binagorians extends Component {
   async generateAirdrop(incPendingTxs, decPendingTxs) {
     const binagoriansContract = ContractsService.getBinagoriansContract();
     let tx = await binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
-    
     incPendingTxs();
 
     tx.wait(1).then((receipt) => {
@@ -116,7 +115,7 @@ export default class Binagorians extends Component {
   async mintToBinagorians(incPendingTxs, decPendingTxs) {
     const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
-    let tx = await binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
+    let tx = await binacoinContract.mint(BINAGORIANS_ADDRESS, utils.parseUnits("100", BigNumber.from(binacoinDecimals)));
     incPendingTxs();
     
     tx.wait(1).then((receipt) => {
