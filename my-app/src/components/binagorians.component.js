@@ -4,6 +4,7 @@ import { TableContainer, Button, Box } from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { BINACOIN_ADDRESS, BINAGORIANS_ADDRESS } from '../contracts-config';
 import { BigNumber, utils } from "ethers";
+import { PendingTxsContext } from "../contexts/pending-txs-context";
 
 export default class Binagorians extends Component {
   constructor(props) {
@@ -99,40 +100,49 @@ export default class Binagorians extends Component {
     });
   }
 
-  async generateAirdrop() {
+  async generateAirdrop(incPendingTxs, decPendingTxs) {
     const binagoriansContract = ContractsService.getBinagoriansContract();
     let tx = await binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
     
+    incPendingTxs();
+
     tx.wait(1).then((receipt) => {
       // This gets called once there are 1 confirmation
       alert("Airdrop Confirmation received: " + receipt.transactionHash);
+      decPendingTxs();
     });
   }
 
-  async mintToBinagorians() {
+  async mintToBinagorians(incPendingTxs, decPendingTxs) {
     const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
     let tx = await binacoinContract.mint(BINAGORIANS_ADDRESS, BigNumber.from(100).mul(BigNumber.from(10).pow(BigNumber.from(binacoinDecimals))));
+    incPendingTxs();
     
     tx.wait(1).then((receipt) => {
       // This gets called once there are 1 confirmation
       alert("Mint Confirmation received: " + receipt.transactionHash);
+      decPendingTxs();
     });
   }
 
   render() {
     return (
-        <Box>
-          <Button colorScheme='blue' size='sm' onClick={this.generateAirdrop}>Generate new airdrop</Button>
-          <Button colorScheme='blue' size='sm' onClick={this.mintToBinagorians}>Mint to Binagorians</Button>
-          <TableContainer>
-              { this.state.loadingData ? (
-                  <p>Loading Please wait...</p>
-              ) : (
-              <DataTable data={this.state.data} columns={this.state.columns}/>
-              )}
-          </TableContainer>
-        </Box>
+        <PendingTxsContext.Consumer>
+          {({incPendingTxs, decPendingTxs}) => (
+            <Box>
+              <Button colorScheme='blue' size='sm' onClick={() => this.generateAirdrop(incPendingTxs, decPendingTxs)}>Generate new airdrop</Button>
+              <Button colorScheme='blue' size='sm' onClick={() => this.mintToBinagorians(incPendingTxs, decPendingTxs)}>Mint to Binagorians</Button>
+              <TableContainer>
+                  { this.state.loadingData ? (
+                      <p>Loading Please wait...</p>
+                  ) : (
+                  <DataTable data={this.state.data} columns={this.state.columns}/>
+                  )}
+              </TableContainer>
+            </Box>
+          )}
+        </PendingTxsContext.Consumer>
     );
   }
 }
