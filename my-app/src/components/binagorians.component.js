@@ -103,26 +103,16 @@ export default class Binagorians extends Component {
   async generateAirdrop(incPendingTxs, decPendingTxs) {
     const binagoriansContract = ContractsService.getBinagoriansContract();
     let tx = await binagoriansContract.generateAirdrop(BINACOIN_ADDRESS);
-    incPendingTxs();
-
-    tx.wait(1).then((receipt) => {
-      // This gets called once there are 1 confirmation
-      alert("Airdrop Confirmation received: " + receipt.transactionHash);
-      decPendingTxs();
-    });
+    
+    ContractsService.handleTxExecution(tx, incPendingTxs, decPendingTxs);
   }
 
   async mintToBinagorians(incPendingTxs, decPendingTxs) {
     const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
     let tx = await binacoinContract.mint(BINAGORIANS_ADDRESS, utils.parseUnits("100", BigNumber.from(binacoinDecimals)));
-    incPendingTxs();
-    
-    tx.wait(1).then((receipt) => {
-      // This gets called once there are 1 confirmation
-      alert("Mint Confirmation received: " + receipt.transactionHash);
-      decPendingTxs();
-    });
+
+    ContractsService.handleTxExecution(tx, incPendingTxs, decPendingTxs);
   }
 
   render() {

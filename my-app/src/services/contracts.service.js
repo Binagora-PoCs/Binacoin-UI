@@ -25,7 +25,21 @@ class ContractsService {
             signer
         );
     }
-}
+  }
+
+  handleTxExecution(tx, incPendingTxs, decPendingTxs, callbackTxExecution) {
+    incPendingTxs();
+    
+    tx.wait(1).then((receipt) => {
+      // This gets called once there are 1 confirmation
+      alert("Tx is confirmed: " + receipt.transactionHash);
+      decPendingTxs();
+
+      if (callbackTxExecution) {
+        callbackTxExecution();
+      }
+    });
+  }
   
 }
 export default new ContractsService();

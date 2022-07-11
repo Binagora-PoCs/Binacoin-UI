@@ -8,8 +8,10 @@ import {
   VStack,
   HStack,
 } from '@chakra-ui/react';
-import ConstractsService from "../services/contracts.service.js";
+import ContractsService from "../services/contracts.service.js";
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
+import { PendingTxsContext } from "../contexts/pending-txs-context";
+
 export default class AddBinagorian extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +50,7 @@ export default class AddBinagorian extends Component {
     });
   }
   
-  async createBinagorian() {
+  async createBinagorian(incPendingTxs, decPendingTxs) {
     var data = {
       address: this.state.address,
       name: this.state.name,
@@ -56,8 +58,11 @@ export default class AddBinagorian extends Component {
       rate: this.state.rate
     };
     
-    const binagoriansContract = ConstractsService.getBinagoriansContract();
+    const binagoriansContract = ContractsService.getBinagoriansContract();
     let tx = await binagoriansContract.create(data.address, data.createdDate, data.name, data.rate);
+
+    ContractsService.handleTxExecution(tx, incPendingTxs, decPendingTxs);
+
     tx.wait(1).then((receipt) => {
       alert('created binagorian: ' + data.address);
     });
@@ -109,7 +114,11 @@ export default class AddBinagorian extends Component {
                     <FormLabel htmlFor='rate'>Rate</FormLabel>
                     <Input id='rate' type='text' required value={this.state.rate} onChange={this.onChangeRate} />
                   </HStack>
-                  <Button colorScheme='blue' size='sm' onClick={this.createBinagorian}>Create</Button>
+                  <PendingTxsContext.Consumer>
+                    {({incPendingTxs, decPendingTxs}) => (
+                      <Button colorScheme='blue' size='sm' onClick={() => this.createBinagorian(incPendingTxs, decPendingTxs)}>Create</Button>
+                    )}
+                  </PendingTxsContext.Consumer>
                 </VStack>
                 
               </FormControl>

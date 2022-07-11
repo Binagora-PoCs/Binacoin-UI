@@ -6,7 +6,8 @@ import {
   StatNumber,
   StatHelpText,
   Box,
-  Button
+  Button,
+  Spinner
 } from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { PendingTxsContext } from "../contexts/pending-txs-context";
@@ -97,7 +98,7 @@ export default class BinagorianProfile extends Component {
         <PendingTxsContext.Consumer>
           {({pendingTxs}) => (
           <Stat>
-            <StatLabel>Pending Txs: {pendingTxs}</StatLabel>
+            <StatLabel hidden={pendingTxs === 0}>Pending Txs: {pendingTxs} <Spinner/></StatLabel>
             <StatLabel>Your ETH Balance is: {this.state.balance}</StatLabel>
             <StatLabel>Balance of {this.state.tokenName} is: {this.state.tokenBalanceInEther}</StatLabel>
             <StatNumber>Welcome {this.state.selectedAddress} - { this.state.name }</StatNumber>
