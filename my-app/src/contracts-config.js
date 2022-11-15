@@ -1,5 +1,5 @@
-export const BINAGORIANS_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-export const BINACOIN_ADDRESS = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
+export const BINAGORIANS_ADDRESS = '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853'
+export const BINACOIN_ADDRESS = '0x0B306BF915C4d645ff596e518fAf3F9669b97016'
 
 export const BINAGORIANS_ABI = [
   {
@@ -306,6 +306,12 @@ export const BINACOIN_ABI = [
         "internalType": "uint256",
         "name": "_value",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_date",
+        "type": "uint256"
       }
     ],
     "name": "Withdraw",
@@ -450,6 +456,62 @@ export const BINACOIN_ABI = [
     "inputs": [
       {
         "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "getBurnsByAddress",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "date",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Binacoin.BurnPtoData[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMyBurns",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "date",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct Binacoin.BurnPtoData[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "spender",
         "type": "address"
       },
@@ -468,35 +530,6 @@ export const BINACOIN_ABI = [
       }
     ],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "bAddress",
-        "type": "address"
-      }
-    ],
-    "name": "lastTransactions",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "entryTime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint16",
-        "name": "rate",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
