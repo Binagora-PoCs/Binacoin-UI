@@ -11,6 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import AddBinagorian from "./components/add-binagorian.component";
 import BinagorianProfile from "./components/binagorian-profile.component";
 import Binagorians from "./components/binagorians.component";
+import Binagorian from "./components/binagorian.component";
 import { PendingTxsContext } from "./contexts/pending-txs-context";
 
 class App extends Component {
@@ -35,7 +36,7 @@ class App extends Component {
             templateAreas={`"header header"
                             "nav main"
                             "nav footer"`}
-            gridTemplateRows={'100px 1fr 30px'}
+            // gridTemplateRows={'100px 1fr 30px'}
             gridTemplateColumns={'150px 1fr'}
             h='200px'
             gap='1'
@@ -54,6 +55,10 @@ class App extends Component {
                 <BreadcrumbItem>
                   <BreadcrumbLink href='/add'>Add</BreadcrumbLink>
                 </BreadcrumbItem>
+
+                <BreadcrumbItem>
+                  <BreadcrumbLink href='/me'>Home</BreadcrumbLink>
+                </BreadcrumbItem>
               </Breadcrumb>
             </GridItem>
             <GridItem pl='2' bg='green.300' area={'main'}>
@@ -61,6 +66,7 @@ class App extends Component {
                 <Routes>
                   <Route path="/add" element={<AddBinagorian/>} />
                   <Route path="/binagorians" element={<Binagorians/>} />
+                  <Route path="/me" element={<Binagorian/>} />
                 </Routes>
               </Box>
             </GridItem>

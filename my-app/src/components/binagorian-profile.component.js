@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { PendingTxsContext } from "../contexts/pending-txs-context";
+import { BINAGORIANS_ADDRESS } from '../contracts-config';
 
 export default class BinagorianProfile extends Component {
   constructor(props) {
@@ -72,20 +73,12 @@ export default class BinagorianProfile extends Component {
     const binacoinContract = ContractsService.getBinacoinContract();
     const tokenName = await binacoinContract.name();
     const tokenBalance = await binacoinContract.balanceOf(accounts[0]);
+    const tokenBalanceInContract = await binacoinContract.balanceOf(BINAGORIANS_ADDRESS);
     const tokenUnits = await binacoinContract.decimals();
     const tokenBalanceInEther = utils.formatUnits(tokenBalance, tokenUnits);
+    const tokenBalanceInContractInEther = utils.formatUnits(tokenBalanceInContract, tokenUnits);
 
-    this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther });
-
-    const binagoriansContract = ContractsService.getBinagoriansContract();
-
-    // binagoriansContract.on("AirdropSent", (address, time) => {
-    //   // Here we check if the Binagorian received an airdrop
-    //   if (accounts[0].toLowerCase() === address.toLowerCase())
-    //   {
-    //     alert("Airdrop received");
-    //   }
-    // });
+    this.setState({ selectedAddress: accounts[0], balance: balanceInEther, block, tokenName, tokenBalanceInEther, tokenBalanceInContractInEther });
   }
 
   renderMetamask() {
@@ -101,6 +94,7 @@ export default class BinagorianProfile extends Component {
             <StatLabel hidden={pendingTxs === 0}>Pending Txs: {pendingTxs} <Spinner/></StatLabel>
             <StatLabel>Your ETH Balance is: {this.state.balance}</StatLabel>
             <StatLabel>Balance of {this.state.tokenName} is: {this.state.tokenBalanceInEther}</StatLabel>
+            <StatLabel>Balance of {this.state.tokenName} in contract is: {this.state.tokenBalanceInContractInEther}</StatLabel>
             <StatNumber>Welcome {this.state.selectedAddress} - { this.state.name }</StatNumber>
             <StatHelpText>Current ETH Block is: {this.state.block}</StatHelpText>
           </Stat>
