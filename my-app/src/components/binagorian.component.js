@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Button, Box, TableContainer, Heading, Divider, Center } from '@chakra-ui/react';
+import { Box, TableContainer, Center} from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { BigNumber, utils } from "ethers";
 import { PendingTxsContext } from "../contexts/pending-txs-context";
 import DataTable  from './data-table.component'
+import WithdrawalModal  from './withdrawal-modal.component'
 
 export default class Binagorians extends Component {
   constructor(props) {
@@ -26,11 +27,10 @@ export default class Binagorians extends Component {
       this.getMyBurns();
   }
 
-  async burnPto(incPendingTxs, decPendingTxs) {
+  async burnPto(tokensToBurn, incPendingTxs, decPendingTxs) {
     const binacoinContract = ContractsService.getBinacoinContract();
     const binacoinDecimals = await binacoinContract.decimals();
-    // TODO: Need to allow user set the amount of PTOs to burn
-    let tx = await binacoinContract.burn(utils.parseUnits("1", BigNumber.from(binacoinDecimals)));
+    let tx = await binacoinContract.burn(utils.parseUnits(tokensToBurn, BigNumber.from(binacoinDecimals)));
 
     ContractsService.handleTxExecution(tx, incPendingTxs, decPendingTxs);
   }
@@ -51,7 +51,7 @@ export default class Binagorians extends Component {
 
     this.setState({
       loadingData : false,
-      data : myBurns,
+      data : myBurns
     });
   }
 
@@ -60,7 +60,8 @@ export default class Binagorians extends Component {
         <PendingTxsContext.Consumer>
           {({incPendingTxs, decPendingTxs}) => (
             <Box>
-              <Button colorScheme='blue' size='sm' onClick={() => this.burnPto(incPendingTxs, decPendingTxs)}>Burn PTOs</Button>
+              <WithdrawalModal incPendingTxs={incPendingTxs} decPendingTxs={decPendingTxs} burnPto={this.burnPto}/>
+
               <Center fontSize="xl">
                   Withdrawals
               </Center>
