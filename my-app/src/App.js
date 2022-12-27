@@ -57,7 +57,7 @@ class App extends Component {
                 </BreadcrumbItem>
 
                 <BreadcrumbItem>
-                  <BreadcrumbLink href='/me'>Home</BreadcrumbLink>
+                  <BreadcrumbLink href='/binagorian/me'>Home</BreadcrumbLink>
                 </BreadcrumbItem>
               </Breadcrumb>
             </GridItem>
@@ -66,7 +66,8 @@ class App extends Component {
                 <Routes>
                   <Route path="/add" element={<AddBinagorian/>} />
                   <Route path="/binagorians" element={<Binagorians/>} />
-                  <Route path="/me" element={<Binagorian/>} />
+                  <Route path="/binagorian/me" element={<Binagorian/>} />
+                  <Route path="/binagorian/:address/withdrawals" element={<Binagorian/>} />
                 </Routes>
               </Box>
             </GridItem>

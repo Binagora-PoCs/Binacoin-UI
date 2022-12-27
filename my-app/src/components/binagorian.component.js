@@ -5,8 +5,17 @@ import { BigNumber, utils } from "ethers";
 import { PendingTxsContext } from "../contexts/pending-txs-context";
 import DataTable  from './data-table.component'
 import WithdrawalModal  from './withdrawal-modal.component'
+import { useParams } from 'react-router-dom';
 
-export default class Binagorians extends Component {
+export function withRouter(Children){
+  return(props)=>{
+
+     const match  = {params: useParams()};
+     return <Children {...props}  match = {match}/>
+ }
+}
+
+class Binagorian extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,8 +32,10 @@ export default class Binagorians extends Component {
             }
           ]
       };
+
+      const address = this.props.match.params.address
     
-      this.getMyBurns();
+      this.getBurns(address);
   }
 
   async burnPto(tokensToBurn, incPendingTxs, decPendingTxs) {
@@ -35,15 +46,19 @@ export default class Binagorians extends Component {
     ContractsService.handleTxExecution(tx, incPendingTxs, decPendingTxs);
   }
 
-  async getMyBurns() {
-    let myBurns = [];
+  async getBurns(address) {
+    let burns = [];
     const binacoinContract = ContractsService.getBinacoinContract();
     let tokenUnits = await binacoinContract.decimals();
-    let myBurnsResponse = await binacoinContract.getMyBurns();
+    let burnsResponse
+    if (!address)
+      burnsResponse = await binacoinContract.getMyBurns();
+    else
+      burnsResponse = await binacoinContract.getBurnsByAddress(address);
 
-    for (let b of myBurnsResponse) {
+    for (let b of burnsResponse) {
       let amountInEther = utils.formatUnits(b.amount, tokenUnits);
-      myBurns.push({ 
+      burns.push({ 
         amount: amountInEther, 
         date: new Date(b.date * 1000).toDateString()
       });
@@ -51,7 +66,7 @@ export default class Binagorians extends Component {
 
     this.setState({
       loadingData : false,
-      data : myBurns
+      data : burns
     });
   }
 
@@ -81,3 +96,5 @@ export default class Binagorians extends Component {
     );
   }
 }
+
+export default withRouter(Binagorian);

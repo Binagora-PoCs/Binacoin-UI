@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import DataTable  from './data-table.component'
-import { TableContainer, Button, Box } from '@chakra-ui/react';
+import { TableContainer, Button, Box, Link } from '@chakra-ui/react';
 import ContractsService from "../services/contracts.service.js";
 import { BINACOIN_ADDRESS, BINAGORIANS_ADDRESS } from '../contracts-config';
 import { BigNumber, utils } from "ethers";
@@ -15,7 +15,9 @@ export default class Binagorians extends Component {
         columns: [
             {
               Header: 'Address',
-              accessor: 'address',
+              accessor: (originalRow, rowIndex) => (
+                    <Link href={"/binagorian/" + originalRow.address + "/withdrawals"}>{originalRow.address}</Link>
+             ),
             },
             {
               Header: 'Name',
